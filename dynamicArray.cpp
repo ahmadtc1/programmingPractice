@@ -16,6 +16,11 @@ public:
         arrPtr = new T[10];
     }
 
+    ~Array()
+    {
+        delete[] arrPtr;
+    }
+
     bool insert(int position, T value)
     {
         if (size == capacity)
