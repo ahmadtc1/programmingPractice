@@ -2,9 +2,11 @@
 // Implemented by Ahmad Chaudhry
 #include <iostream>
 #include <string>
+#include "mapTestDriver.hpp"
 
 class Map
 {
+friend class MapTestDriver;
 private:
     struct HashNode
     {

@@ -1,9 +1,9 @@
 // Hash map implementation in C++
 // Implemented by Ahmad Chaudhry
 #include "hashMap.hpp"
-#include <iostream>
-#include <string>
+#include <cassert>
 
+// Implementing member functions for Map class
 Map::Map()
 {
     size = 0;
@@ -71,23 +71,26 @@ bool Map::insert(std::string key, int value)
     if (arr[index] == nullptr)
     {
         arr[index] = newNode;
+        ++size;
     }
     else
     {
         HashNode* curr = arr[index];
         while (curr -> next != nullptr)
         {
-            if (curr -> next -> id == key)
+            if (curr -> next -> id == key || curr -> id == key)
             {
                 std::cout << "This key already exists. No duplicates possible. Use update(key, value) if looking to update" << std::endl;
                 return false;
             }
             curr = curr -> next;
         }
-        curr -> next = newNode;
+        if (curr -> id != key)
+        {
+            curr -> next = newNode;
+            ++size;
+        }
     }
-    std::cout << "Inserted succesfully" << std::endl;
-    ++size;
     return true;
 }
 
@@ -99,6 +102,11 @@ bool Map::insertOrAssign(std::string key, int value)
     if (arr[index] == nullptr)
     {
         arr[index] = newNode;
+        ++size;
+    }
+    else if (arr[index] -> id == key)
+    {
+        arr[index] -> val = value;
     }
     else
     {
@@ -115,9 +123,8 @@ bool Map::insertOrAssign(std::string key, int value)
             curr = curr -> next;
         }
         curr -> next = newNode;
+        ++size;
     }
-    std::cout << "Inserted succesfully" << std::endl;
-    ++size;
     return true;
 }
 
@@ -169,6 +176,7 @@ bool Map::remove(std::string key)
         {
             delete arr[index];
             arr[index] = nullptr;
+            --size;
             return true;
         }
         else
@@ -182,6 +190,7 @@ bool Map::remove(std::string key)
                     HashNode* next = curr -> next;
                     delete curr;
                     prev -> next = next;
+                    --size;
                     return true;
                 }
                 curr = curr -> next;
@@ -204,6 +213,7 @@ bool Map::clear()
         }
         node = nullptr;
     }
+    size = 0;
     return true;
 }
 
@@ -220,7 +230,7 @@ int Map::getSize()
 void Map::print()
 {
     std::cout << "******** PRINTING CONTENTS OF MAP ********" << std::endl;
-    for (auto& node : arr)
+    for (auto node : arr)
     {
         while (node != nullptr)
         {
@@ -233,14 +243,6 @@ void Map::print()
 
 int main()
 {
-    Map counts;
-    counts.insert("String", 100);
-    counts.insert("Ahmad", 10000);
-    counts.insert("K", 99);
-    counts.insertOrAssign("M", 57);
-    std::cout << counts.search("K") << std::endl;
-    // std::cout << counts.search("Ahmad") << std::endl;
-    counts.update("non-existent", 50);
-    counts.print();
-    std::cout << counts.getSize() << std::endl;
+    MapTestDriver test;
+    test.runTestSuite();
 }
